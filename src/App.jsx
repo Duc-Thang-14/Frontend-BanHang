@@ -1,13 +1,13 @@
-import React, { Fragment, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { routes } from "./routes";
-import HeaderComponent from "./components/HeaderComponent/HeaderComponent";
-import DefaultComponent from "./components/Defaultcomponent/Defaucomponent";
+import { BrowserRouter } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 import api from "./services/axiosInstance";
 import { setAuth } from "./redux/slices/authSlice";
+import AppRoutes from "./routes/index";
+
 const App = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     const checkLogin = async () => {
       try {
@@ -21,36 +21,16 @@ const App = () => {
             }),
           );
         }
-      } catch (error) {
-        // Không cần log gì cả
-      }
+      } catch (error) {}
     };
 
     checkLogin();
-  }, []);
+  }, [dispatch]);
 
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          {routes.map((item, index) => {
-            const Page = item.page;
-            const Layout = item.isShowHeader ? DefaultComponent : Fragment;
-            return (
-              <Route
-                key={index}
-                path={item.path}
-                element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                }
-              />
-            );
-          })}
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 };
 
