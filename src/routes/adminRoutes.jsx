@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminUser from "../pages/AdminPage/AdminUser";
-import AdminProduct from "../pages/AdminPage/Products";
+import AdminProduct from "../pages/AdminPage/AdminProduct";
 import AdminRoute from "../guards/AdminRoute";
 
 const adminRoutes = {
