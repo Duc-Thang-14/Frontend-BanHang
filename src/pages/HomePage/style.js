@@ -3,11 +3,22 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 export const WrapperTypeProduct = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
-  font-size: 20px;
-  justify-content: flex-start;
-  heigh: 44px;
+  flex-wrap: wrap;
+
+  gap: 28px;
+
+  margin: 20px 0 30px 0;
+  padding: 14px 20px;
+
+  background: #ffffff;
+  border-radius: 10px;
+
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+
+  font-size: 18px;
+  font-weight: 600;
 `;
 export const WrapperButtonMore = styled(ButtonComponent)`
   background-color: #1890ff;
@@ -31,8 +42,10 @@ export const WrapperButtonMore = styled(ButtonComponent)`
 `;
 
 export const WrapperProducts = styled.div`
-  display: flex;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 20px;
+
   margin-top: 30px;
-  flex-wrap: wrap;
 `;

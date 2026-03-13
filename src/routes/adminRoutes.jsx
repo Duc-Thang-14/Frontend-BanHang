@@ -3,6 +3,8 @@ import AdminLayout from "../layouts/AdminLayout";
 import AdminUser from "../pages/AdminPage/AdminUser";
 import AdminProduct from "../pages/AdminPage/AdminProduct";
 import AdminRoute from "../guards/AdminRoute";
+import Dashboard from "../pages/AdminPage/Dashboard";
+import AdminOrderPage from "../pages/AdminPage/AdminOrderPage";
 
 const adminRoutes = {
   path: "/admin",
@@ -12,9 +14,11 @@ const adminRoutes = {
     </AdminRoute>
   ),
   children: [
-    { index: true, element: <Navigate to="users" replace /> },
+    { index: true, element: <Navigate to="dashboard" replace /> },
+    { path: "dashboard", element: <Dashboard /> },
     { path: "users", element: <AdminUser /> },
     { path: "products", element: <AdminProduct /> },
+    { path: "get-all-orders", element: <AdminOrderPage /> },
   ],
 };
 

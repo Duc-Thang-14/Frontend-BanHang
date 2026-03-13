@@ -1,78 +1,142 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
+import {
+  DashboardOutlined,
+  UserOutlined,
+  ShoppingOutlined,
+  HomeOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
+import { Avatar } from "antd";
 
 const AdminLayout = () => {
   const location = useLocation();
 
-  const menuItemStyle = (path) => ({
-    padding: "16px 18px",
-    borderRadius: 12,
-    textDecoration: "none",
-    display: "block",
-    marginBottom: 12,
-    fontSize: 18,
-    fontWeight: 600,
-    backgroundColor: location.pathname.includes(path) ? "#2563eb" : "#f1f5f9",
-    color: location.pathname.includes(path) ? "#fff" : "#1e293b",
-    transition: "all 0.2s ease",
-  });
+  const menuItems = [
+    { path: "dashboard", label: "Thống kê", icon: <DashboardOutlined /> },
+    { path: "users", label: "Quản lý người dùng", icon: <UserOutlined /> },
+    { path: "products", label: "Quản lý sản phẩm", icon: <ShoppingOutlined /> },
+    {
+      path: "get-all-orders",
+      label: "Quản lý đơn hàng",
+      icon: <FileTextOutlined />,
+    },
+  ];
 
   return (
-    <div style={{ display: "flex", height: "100vh", background: "#e2e8f0" }}>
-      {/* Sidebar */}
+    <div style={{ display: "flex", height: "100vh", background: "#f1f5f9" }}>
+      {/* ===== SIDEBAR ===== */}
       <div
         style={{
-          width: 280,
-          background: "#ffffff",
+          width: 260,
+          background: "#0f172a",
           padding: 24,
-          boxShadow: "2px 0 10px rgba(0,0,0,0.05)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
-        <h1
+        <div>
+          <h2
+            style={{
+              color: "#fff",
+              marginBottom: 40,
+              fontWeight: 700,
+              letterSpacing: 1,
+            }}
+          >
+            🚀 ADMIN
+          </h2>
+
+          {menuItems.map((item) => {
+            const isActive = location.pathname.includes(item.path);
+
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "14px 16px",
+                  borderRadius: 10,
+                  marginBottom: 12,
+                  textDecoration: "none",
+                  fontWeight: 500,
+                  fontSize: 15,
+                  transition: "all 0.2s ease",
+                  background: isActive ? "#2563eb" : "transparent",
+                  color: isActive ? "#fff" : "#cbd5e1",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) e.currentTarget.style.background = "#1e293b";
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive)
+                    e.currentTarget.style.background = "transparent";
+                }}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* ===== BACK TO HOME ===== */}
+        <Link
+          to="/"
           style={{
-            fontSize: 26,
-            fontWeight: 700,
-            marginBottom: 30,
-            color: "#0f172a",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "14px 16px",
+            borderRadius: 10,
+            textDecoration: "none",
+            fontWeight: 500,
+            fontSize: 15,
+            background: "#22c55e",
+            color: "#fff",
           }}
         >
-          🚀 Admin Panel
-        </h1>
-
-        <Link to="users" style={menuItemStyle("users")}>
-          👤 Quản lý người dùng
-        </Link>
-
-        <Link to="products" style={menuItemStyle("products")}>
-          📦 Quản lý sản phẩm
+          <HomeOutlined />
+          Về trang Home
         </Link>
       </div>
 
-      {/* Main */}
+      {/* ===== MAIN ===== */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Header */}
+        {/* HEADER */}
         <div
           style={{
             height: 70,
             background: "#ffffff",
             display: "flex",
             alignItems: "center",
+            justifyContent: "space-between",
             padding: "0 30px",
-            fontSize: 22,
-            fontWeight: 700,
-            color: "#0f172a",
             boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
           }}
         >
-          Dashboard
+          <div style={{ fontSize: 20, fontWeight: 600 }}>Admin Dashboard</div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Avatar size={40}>A</Avatar>
+            <div>
+              <div style={{ fontWeight: 600 }}>Admin</div>
+              <div style={{ fontSize: 12, color: "#64748b" }}>
+                Super Administrator
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Content */}
+        {/* CONTENT */}
         <div
           style={{
             flex: 1,
             padding: 30,
             overflowY: "auto",
-            fontSize: 18,
           }}
         >
           <Outlet />

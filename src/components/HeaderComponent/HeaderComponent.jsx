@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   WrapperHeader,
   WrapperTextHeader,
   WrapperAccountHeader,
 } from "./style.js";
-import { Badge, Col, Dropdown, Space } from "antd";
+
+import { Badge, Col, Dropdown, Flex, Space } from "antd";
 import {
   UserOutlined,
   CaretDownOutlined,
@@ -15,27 +16,52 @@ import ButttonInputSearch from "../ButtonInputSearch/ButtonInputSearch.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearAuth } from "../../redux/slices/authSlice";
-import api from "../../services/axiosInstance.js"; // axios instance của bạn
+import api from "../../services/axiosInstance.js";
+import useDebounce from "../../hooks/useDebounce";
 
 const HeaderComponent = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ✅ Logout
+  const [search, setSearch] = useState("");
+
+  // debounce search
+  const debounceSearch = useDebounce(search, 500);
+
+  // 🔎 search realtime (Shopee style)
+  useEffect(() => {
+    if (debounceSearch.trim()) {
+      navigate(`/?search=${debounceSearch}`);
+    } else {
+      navigate(`/`);
+    }
+  }, [debounceSearch]);
+
+  // 🔎 search khi bấm nút
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    navigate(`/?search=${search}`);
+  };
+
+  // logout
   const handleLogout = async () => {
     try {
       await api.post("/auth/logout", {}, { withCredentials: true });
-
       dispatch(clearAuth());
-
       navigate("/sign-in");
     } catch (error) {
       console.log(error);
     }
   };
 
-  // ✅ Dropdown items
+  const handleGoCart = () => {
+    if (!user) {
+      navigate("/sign-in");
+    } else {
+      navigate("/cart");
+    }
+  };
   const items = [
     {
       key: "profile",
@@ -51,6 +77,15 @@ const HeaderComponent = () => {
           },
         ]
       : []),
+    ...(!user?.isAdmin
+      ? [
+          {
+            key: "my-orders",
+            label: "Lịch sử đơn hàng",
+            onClick: () => navigate("/my-orders"),
+          },
+        ]
+      : []),
     {
       key: "logout",
       label: "Đăng xuất",
@@ -62,7 +97,9 @@ const HeaderComponent = () => {
     <div>
       <WrapperHeader>
         <Col span={6}>
-          <WrapperTextHeader>CỬA HÀNG</WrapperTextHeader>
+          <Link to="/">
+            <WrapperTextHeader>CỬA HÀNG</WrapperTextHeader>
+          </Link>
         </Col>
 
         <Col span={12}>
@@ -70,8 +107,11 @@ const HeaderComponent = () => {
             size="large"
             variant="borderless"
             textbutton="Tìm kiếm"
-            placeholder="input search text"
+            placeholder="Tìm sản phẩm..."
             backgroundColorButton="blue"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onSearch={handleSearch}
           />
         </Col>
 
@@ -105,21 +145,30 @@ const HeaderComponent = () => {
               <div style={{ cursor: "pointer" }}>
                 <Link to="/sign-in" style={{ color: "white" }}>
                   <span>Đăng nhập/Đăng ký</span>
+                  <div>
+                    <span>Tài khoản</span>
+                    <CaretDownOutlined />
+                  </div>
                 </Link>
-                <div>
-                  <span>Tài khoản</span>
-                  <CaretDownOutlined />
-                </div>
               </div>
             )}
 
-            <Badge count={5} style={{ fontSize: "10px" }}>
-              <ShoppingCartOutlined
-                style={{ fontSize: "25px", marginLeft: "30px", color: "white" }}
-              />
-            </Badge>
+            <div
+              onClick={handleGoCart}
+              style={{ cursor: "pointer", display: "flex", gap: "10px" }}
+            >
+              <Badge count={5} style={{ fontSize: "10px" }}>
+                <ShoppingCartOutlined
+                  style={{
+                    fontSize: "25px",
+                    marginLeft: "30px",
+                    color: "white",
+                  }}
+                />
+              </Badge>
 
-            <span>Giỏ hàng</span>
+              <span>Giỏ hàng</span>
+            </div>
           </WrapperAccountHeader>
         </Col>
       </WrapperHeader>

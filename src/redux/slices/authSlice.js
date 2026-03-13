@@ -1,35 +1,3 @@
-// import { createSlice } from "@reduxjs/toolkit";
-
-// const initialState = {
-//   user: null,
-//   accessToken: null,
-// };
-
-// const authSlice = createSlice({
-//   name: "auth",
-//   initialState,
-//   reducers: {
-//     setAuth: (state, action) => {
-//       state.user = action.payload.user;
-//       state.accessToken = action.payload.accessToken;
-//     },
-//     updateAccessToken: (state, action) => {
-//       state.accessToken = action.payload;
-//     },
-//     updateUser: (state, action) => {
-//       state.user = action.payload;
-//     },
-//     clearAuth: (state) => {
-//       state.accessToken = null;
-//       state.user = null;
-//     },
-//   },
-// });
-
-// export const { setAuth, clearAuth, updateUser, updateAccessToken } =
-//   authSlice.actions;
-// export default authSlice.reducer;
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

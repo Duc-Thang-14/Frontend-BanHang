@@ -9,6 +9,11 @@ import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
+import CartPage from "../pages/CartPage/CartPage";
+import CheckoutPage from "../pages/CheckoutPage/CheckoutPage";
+import OrderSuccessPage from "../pages/OrderSuccessPage/OrderSuccessPage";
+import MyOrdersPage from "../pages/MyOrdersPage/MyOrdersPage";
+import OrderDetailPage from "../pages/OrderDetailPage/OrderDetailPage";
 
 const publicRoutes = [
   {
@@ -19,9 +24,23 @@ const publicRoutes = [
       { path: "home", element: <HomePage /> },
       { path: "product", element: <ProductPage /> },
       { path: "type", element: <TypeProductPage /> },
-      { path: "product-details", element: <ProductDetailsPage /> },
+      { path: "product-detail/:id", element: <ProductDetailsPage /> },
       { path: "order", element: <OrderPage /> },
       { path: "profile", element: <ProfilePage /> },
+      { path: "cart", element: <CartPage /> },
+      { path: "checkout", element: <CheckoutPage /> },
+      {
+        path: "/order-success",
+        element: <OrderSuccessPage />,
+      },
+      {
+        path: "/my-orders",
+        element: <MyOrdersPage />,
+      },
+      {
+        path: "/get-detail/:id",
+        element: <OrderDetailPage />,
+      },
     ],
   },
   { path: "/sign-in", element: <SignInPage /> },

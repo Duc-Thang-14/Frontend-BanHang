@@ -5,7 +5,9 @@ const MainLayout = () => {
   return (
     <>
       <HeaderComponent />
-      <Outlet />
+      <div style={{ paddingTop: "70px" }}>
+        <Outlet />
+      </div>
     </>
   );
 };

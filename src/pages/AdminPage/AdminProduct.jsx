@@ -9,6 +9,9 @@ import {
   InputNumber,
   message,
   Select,
+  Descriptions,
+  Tag,
+  Rate,
 } from "antd";
 import * as ProductAPI from "../../services/ProductService";
 import { Upload } from "antd";
@@ -28,6 +31,8 @@ const AdminProduct = () => {
   const [sortField, setSortField] = useState(null);
   const [filterType, setFilterType] = useState(null);
   const [types, setTypes] = useState([]);
+  const [detailProduct, setDetailProduct] = useState(null);
+  const [openDetail, setOpenDetail] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -171,7 +176,9 @@ const AdminProduct = () => {
       render: (_, record) => (
         <Space>
           <Button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation(); // 🛑 chặn mở detail
+
               setEditingProduct(record);
 
               form.setFieldsValue({
@@ -189,12 +196,18 @@ const AdminProduct = () => {
               });
 
               setIsModalOpen(true);
-              setIsModalOpen(true);
             }}
           >
             Edit
           </Button>
-          <Button danger onClick={() => handleDelete(record._id)}>
+
+          <Button
+            danger
+            onClick={(e) => {
+              e.stopPropagation(); // 🛑 chặn mở detail
+              handleDelete(record._id);
+            }}
+          >
             Delete
           </Button>
         </Space>
@@ -282,6 +295,13 @@ const AdminProduct = () => {
             fetchProducts(page, pageSize);
           },
         }}
+        onRow={(record) => ({
+          onClick: () => {
+            setDetailProduct(record);
+            setOpenDetail(true);
+          },
+          style: { cursor: "pointer" },
+        })}
       />
 
       <Modal
@@ -336,6 +356,78 @@ const AdminProduct = () => {
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="Product Detail"
+        open={openDetail}
+        footer={null}
+        width={750}
+        onCancel={() => setOpenDetail(false)}
+      >
+        {detailProduct && (
+          <div style={{ display: "flex", gap: 30 }}>
+            {/* IMAGE */}
+            <div>
+              <img
+                key={detailProduct._id}
+                src={`http://localhost:3000${detailProduct.image}`}
+                alt="product"
+                style={{
+                  width: 220,
+                  height: 220,
+                  objectFit: "cover",
+                  borderRadius: 12,
+                  border: "1px solid #eee",
+                }}
+              />
+            </div>
+
+            {/* INFO */}
+            <div style={{ flex: 1 }}>
+              <Descriptions column={1} bordered size="small">
+                <Descriptions.Item label="ID">
+                  {detailProduct._id}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Name">
+                  {detailProduct.name}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Type">
+                  s<Tag color="blue">{detailProduct.type}</Tag>
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Price">
+                  {detailProduct.price?.toLocaleString()} ₫
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Stock">
+                  {detailProduct.countInStock}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Rating">
+                  <Rate
+                    disabled
+                    allowHalf
+                    defaultValue={detailProduct.rating}
+                  />
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Discount">
+                  {detailProduct.discount} %
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Sold">
+                  {detailProduct.selled}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Description">
+                  {detailProduct.description || "No description"}
+                </Descriptions.Item>
+              </Descriptions>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

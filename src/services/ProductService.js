@@ -7,6 +7,7 @@ export const getAllProduct = async (
   sortField,
   sortOrder,
   type,
+  search,
 ) => {
   const res = await api.get("/product/get-all", {
     params: {
@@ -15,6 +16,7 @@ export const getAllProduct = async (
       sortField,
       sortOrder,
       type,
+      search,
     },
   });
 
@@ -52,5 +54,14 @@ export const deleteManyProduct = async (ids) => {
 };
 export const getAllType = async () => {
   const res = await api.get("/product/get-all-type");
+  return res.data;
+};
+
+export const searchProduct = async (keyword) => {
+  const res = await api.get(`/product/search?keyword=${keyword}`);
+  return res.data;
+};
+export const getDetailProduct = async (id) => {
+  const res = await api.get(`/product/get-detail/${id}`);
   return res.data;
 };

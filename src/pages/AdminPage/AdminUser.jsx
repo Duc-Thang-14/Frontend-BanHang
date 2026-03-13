@@ -8,6 +8,9 @@ import {
   Select,
   message,
   Space,
+  Descriptions,
+  Tag,
+  Rate,
 } from "antd";
 import * as UserService from "../../services/UserService";
 
@@ -20,6 +23,8 @@ const AdminUser = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+  const [detailUser, setDetailUser] = useState(null);
+  const [openDetail, setOpenDetail] = useState(false);
 
   const [params, setParams] = useState({
     page: 1,
@@ -136,7 +141,8 @@ const AdminUser = () => {
         <Space>
           <Button
             type="link"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation(); // 🛑 chặn mở modal detail
               setEditingUser(record);
               form.setFieldsValue({
                 email: record.email,
@@ -147,7 +153,15 @@ const AdminUser = () => {
           >
             Sửa
           </Button>
-          <Button type="link" danger onClick={() => handleDelete(record._id)}>
+
+          <Button
+            type="link"
+            danger
+            onClick={(e) => {
+              e.stopPropagation(); // 🛑 chặn mở modal detail
+              handleDelete(record._id);
+            }}
+          >
             Xóa
           </Button>
         </Space>
@@ -222,6 +236,15 @@ const AdminUser = () => {
         loading={loading}
         pagination={pagination}
         onChange={handleTableChange}
+        onRow={(record) => ({
+          onClick: () => {
+            setDetailUser(record);
+            setOpenDetail(true);
+          },
+          style: {
+            cursor: "pointer",
+          },
+        })}
       />
 
       <Modal
@@ -319,6 +342,74 @@ const AdminUser = () => {
             </Select>
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="User Detail"
+        open={openDetail}
+        footer={null}
+        onCancel={() => setOpenDetail(false)}
+        width={700}
+      >
+        {detailUser && (
+          <div style={{ display: "flex", gap: 30 }}>
+            {/* AVATAR */}
+            <div>
+              <img
+                key={detailUser._id}
+                src={
+                  detailUser.avatar
+                    ? `${detailUser.avatar}`
+                    : "https://via.placeholder.com/200"
+                }
+                alt="avatar"
+                style={{
+                  width: 200,
+                  height: 200,
+                  objectFit: "cover",
+                  borderRadius: 12,
+                  border: "1px solid #eee",
+                }}
+              />
+            </div>
+
+            {/* INFO */}
+            <div style={{ flex: 1 }}>
+              <Descriptions column={1} bordered size="small">
+                <Descriptions.Item label="ID">
+                  {detailUser._id}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Name">
+                  {detailUser.name || "—"}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Email">
+                  {detailUser.email}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Role">
+                  {detailUser.isAdmin ? (
+                    <Tag color="red">Admin</Tag>
+                  ) : (
+                    <Tag color="blue">User</Tag>
+                  )}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Phone">
+                  {detailUser.phone || "—"}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="City">
+                  {detailUser.city || "—"}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Address">
+                  {detailUser.address || "—"}
+                </Descriptions.Item>
+              </Descriptions>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
